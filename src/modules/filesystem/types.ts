@@ -1,4 +1,4 @@
-export interface FileSystemObject {
+export interface Object {
   key: string;
   eTag: string;
   isDir: boolean;

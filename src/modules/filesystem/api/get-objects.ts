@@ -1,5 +1,5 @@
 import { api } from "@/lib/api-client";
-import { FileSystemObject } from "../types";
+import { Object } from "../types";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { QueryConfig } from "@/lib/react-query";
 
@@ -7,9 +7,7 @@ interface GetObjectsParams {
   prefix?: string;
 }
 
-const getObjects = async (
-  params: GetObjectsParams
-): Promise<FileSystemObject[]> => {
+const getObjects = async (params: GetObjectsParams): Promise<Object[]> => {
   return await api.get("/filesystem", { params });
 };
 
