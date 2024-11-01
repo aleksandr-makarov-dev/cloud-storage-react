@@ -16,11 +16,28 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { mockFileSystemObjects } from "@/modules/filesystem/mock";
+import { useGetObjects } from "@/modules/filesystem/api/get-objects";
+import { FileSystemObject } from "@/modules/filesystem/types";
 import { Folder, File } from "lucide-react";
 import prettyBytes from "pretty-bytes";
+import { useNavigate, useParams } from "react-router";
+import dayjs from "dayjs";
 
 export const FileSystemPage = () => {
+  const navigate = useNavigate();
+  const { prefix } = useParams<{ prefix: string }>();
+
+  const { data } = useGetObjects({ prefix: prefix });
+
+  const handleTableRowClick = (value: FileSystemObject) => {
+    if (!value.isDir) {
+      return;
+    }
+
+    const encoded = encodeURIComponent(value.key);
+    navigate(`/filesystem/${encoded}`);
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <Breadcrumb>
@@ -61,8 +78,12 @@ export const FileSystemPage = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {mockFileSystemObjects.map((obj) => (
-            <TableRow key={obj.eTag} className="hover:cursor-pointer">
+          {data?.map((obj) => (
+            <TableRow
+              key={obj.key}
+              className="hover:cursor-pointer"
+              onClick={() => handleTableRowClick(obj)}
+            >
               <TableCell>
                 {obj.isDir ? (
                   <Folder
@@ -79,7 +100,10 @@ export const FileSystemPage = () => {
                   .filter((k) => !!k)
                   .slice(-1)}
               </TableCell>
-              <TableCell>{obj.lastModifiedDateTime}</TableCell>
+              <TableCell>
+                {obj.lastModifiedDateTime &&
+                  dayjs(obj.lastModifiedDateTime).toString()}
+              </TableCell>
               <TableCell>{obj.isDir ? "-" : prettyBytes(obj.size)}</TableCell>
             </TableRow>
           ))}

@@ -21,7 +21,7 @@ const navBarLinks: NavBarLink[] = [
 export const Navbar = () => {
   return (
     <nav className="w-full bg-zinc-900 ">
-      <div className="py-3 max-w-screen-xl mx-auto flex justify-between">
+      <div className="py-3 max-w-screen-xl mx-auto flex justify-between px-4 xl:px-0">
         <div className="flex items-center gap-8">
           <h2 className="text-primary-foreground text-xl font-medium">
             <Link to="/">Cloud Storage</Link>

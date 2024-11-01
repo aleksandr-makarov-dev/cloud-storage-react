@@ -7,11 +7,11 @@ export const MainLayout = () => {
       <header>
         <Navbar />
       </header>
-      <main className="flex-1 max-w-screen-xl w-full mx-auto py-8">
+      <main className="flex-1 max-w-screen-xl w-full mx-auto py-8 px-4 xl:px-0">
         <Outlet />
       </main>
       <footer className="bg-zinc-200 w-full">
-        <div className="max-w-screen-xl mx-auto py-3">
+        <div className="max-w-screen-xl mx-auto py-3 px-4 xl:px-0">
           <p className="text-sm">Cloud Storage 2024 @ Aleksandr Makarov</p>
         </div>
       </footer>
