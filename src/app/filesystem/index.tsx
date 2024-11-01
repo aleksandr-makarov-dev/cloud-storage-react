@@ -18,16 +18,49 @@ import {
 } from "@/components/ui/table";
 import { useGetObjects } from "@/modules/filesystem/api/get-objects";
 import { FileSystemObject } from "@/modules/filesystem/types";
-import { Folder, File } from "lucide-react";
+import {
+  Folder,
+  File,
+  RefreshCwIcon,
+  UploadIcon,
+  SearchIcon,
+} from "lucide-react";
 import prettyBytes from "pretty-bytes";
 import { useNavigate, useParams } from "react-router";
 import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import React from "react";
+import { NavLink } from "react-router-dom";
+
+interface BreadCrumbLinkData {
+  name: string;
+  href: string;
+}
 
 export const FileSystemPage = () => {
   const navigate = useNavigate();
   const { prefix } = useParams<{ prefix: string }>();
 
   const { data } = useGetObjects({ prefix: prefix });
+
+  const [breadcrumbs, setBreadcrumbs] = useState<BreadCrumbLinkData[]>([]);
+
+  useEffect(() => {
+    setBreadcrumbs([
+      {
+        name: "root",
+        href: "/filesystem",
+      },
+      {
+        name: "my-folder",
+        href: "/filesystem/my-folder",
+      },
+      {
+        name: "my-images",
+        href: "/filesystem/my-images",
+      },
+    ]);
+  }, [prefix]);
 
   const handleTableRowClick = (value: FileSystemObject) => {
     if (!value.isDir) {
@@ -42,17 +75,28 @@ export const FileSystemPage = () => {
     <div className="flex flex-col gap-4">
       <Breadcrumb>
         <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>/</BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/components">Components</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>/</BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-          </BreadcrumbItem>
+          {breadcrumbs.map((bc, i) => {
+            if (i < breadcrumbs.length - 1) {
+              return (
+                <React.Fragment>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink asChild>
+                      <NavLink to={bc.href}>{bc.name}</NavLink>
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator>/</BreadcrumbSeparator>
+                </React.Fragment>
+              );
+            } else {
+              return (
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="font-medium">
+                    {bc.name}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              );
+            }
+          })}
         </BreadcrumbList>
       </Breadcrumb>
 
@@ -60,11 +104,21 @@ export const FileSystemPage = () => {
         <form className="w-full">
           <div className="flex gap-2">
             <Input className="w-full" placeholder="Search in filesystem" />
-            <Button variant="secondary">Search</Button>
+            <Button variant="secondary">
+              <SearchIcon className="w-6 h-6" />
+              Search
+            </Button>
           </div>
         </form>
-        <div>
-          <Button>Upload</Button>
+        <div className="flex gap-2">
+          <Button variant="outline">
+            <RefreshCwIcon className="w-6 h-6" />
+            Refresh
+          </Button>
+          <Button>
+            <UploadIcon className="w-6 h-6" />
+            Upload
+          </Button>
         </div>
       </div>
 

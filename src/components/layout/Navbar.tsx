@@ -13,6 +13,10 @@ const navBarLinks: NavBarLink[] = [
     href: "/",
   },
   {
+    name: "File System",
+    href: "/filesystem",
+  },
+  {
     name: "About",
     href: "/about",
   },
@@ -26,7 +30,7 @@ export const Navbar = () => {
           <h2 className="text-primary-foreground text-xl font-medium">
             <Link to="/">Cloud Storage</Link>
           </h2>
-          <ul className="flex gap-3">
+          <ul className="flex gap-4">
             {navBarLinks.map((link) => (
               <li key={link.href}>
                 <NavLink
